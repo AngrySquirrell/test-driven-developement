@@ -199,4 +199,24 @@ describe('HandEvaluator', () => {
     expect(result.chosenCards[0].rank).toBe(Rank.Five);
     expect(result.chosenCards[4].rank).toBe(Rank.Ace);
   });
+
+  it('should identify Straight Flush', () => {
+    const cards = [
+      new Card(Rank.Nine, Suit.Clubs),
+      new Card(Rank.Eight, Suit.Clubs),
+      new Card(Rank.Seven, Suit.Clubs),
+      new Card(Rank.Six, Suit.Clubs),
+      new Card(Rank.Five, Suit.Clubs),
+      new Card(Rank.King, Suit.Diamonds),
+      new Card(Rank.Two, Suit.Diamonds)
+    ];
+
+    const result = HandEvaluator.evaluate(cards);
+
+    expect(result.category).toBe(HandCategory.StraightFlush);
+    expect(result.chosenCards.length).toBe(5);
+    // 9, 8, 7, 6, 5
+    expect(result.chosenCards[0].rank).toBe(Rank.Nine);
+    expect(result.chosenCards[4].rank).toBe(Rank.Five);
+  });
 });
