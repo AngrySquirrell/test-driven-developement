@@ -138,4 +138,25 @@ describe('HandEvaluator', () => {
     expect(result.chosenCards[3].rank).toBe(Rank.Queen);
     expect(result.chosenCards[4].rank).toBe(Rank.Queen);
   });
+
+  it('should identify Flush', () => {
+    const cards = [
+      new Card(Rank.Ace, Suit.Hearts),
+      new Card(Rank.Jack, Suit.Hearts),
+      new Card(Rank.Eight, Suit.Hearts),
+      new Card(Rank.Four, Suit.Hearts),
+      new Card(Rank.Three, Suit.Hearts),
+      new Card(Rank.King, Suit.Clubs),
+      new Card(Rank.Two, Suit.Diamonds)
+    ];
+
+    const result = HandEvaluator.evaluate(cards);
+
+    expect(result.category).toBe(HandCategory.Flush);
+    expect(result.chosenCards.length).toBe(5);
+    // Should be A, J, 8, 4, 3
+    expect(result.chosenCards[0].rank).toBe(Rank.Ace);
+    expect(result.chosenCards[1].rank).toBe(Rank.Jack);
+    expect(result.chosenCards[4].rank).toBe(Rank.Three);
+  });
 });

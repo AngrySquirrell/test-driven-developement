@@ -70,6 +70,22 @@ export class HandEvaluator {
       };
     }
 
+    // Check Flush
+    const suitGroups = new Map<import('./card').Suit, Card[]>();
+    for (const card of sorted) {
+      if (!suitGroups.has(card.suit)) suitGroups.set(card.suit, []);
+      suitGroups.get(card.suit)!.push(card);
+    }
+
+    for (const group of suitGroups.values()) {
+      if (group.length >= 5) {
+        return {
+          category: HandCategory.Flush,
+          chosenCards: group.slice(0, 5)
+        };
+      }
+    }
+
     if (trips.length > 0) {
       const bestTrip = trips[0];
       const kickers = sorted.filter(c => !bestTrip.includes(c)).slice(0, 2);
