@@ -39,6 +39,17 @@ export class HandEvaluator {
       if (group.length === 2) pairs.push(group);
     }
 
+    if (pairs.length >= 2) {
+      const bestPair = pairs[0];
+      const secondPair = pairs[1];
+      const usedCards = [...bestPair, ...secondPair];
+      const kicker = sorted.filter(c => !usedCards.includes(c))[0];
+      return {
+        category: HandCategory.TwoPair,
+        chosenCards: [...bestPair, ...secondPair, kicker]
+      };
+    }
+
     if (pairs.length > 0) {
       const bestPair = pairs[0];
       const kickers = sorted.filter(c => c.rank !== bestPair[0].rank).slice(0, 3);

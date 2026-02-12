@@ -46,4 +46,28 @@ describe('HandEvaluator', () => {
     expect(result.chosenCards[3].rank).toBe(Rank.Queen);
     expect(result.chosenCards[4].rank).toBe(Rank.Jack);
   });
+
+  it('should identify Two Pair', () => {
+    const cards = [
+      new Card(Rank.King, Suit.Clubs),
+      new Card(Rank.King, Suit.Diamonds),
+      new Card(Rank.Queen, Suit.Hearts),
+      new Card(Rank.Queen, Suit.Spades),
+      new Card(Rank.Jack, Suit.Clubs),
+      new Card(Rank.Jack, Suit.Diamonds), // 3rd pair
+      new Card(Rank.Nine, Suit.Hearts)
+    ];
+
+    const result = HandEvaluator.evaluate(cards);
+
+    expect(result.category).toBe(HandCategory.TwoPair);
+    expect(result.chosenCards.length).toBe(5);
+    // K, K, Q, Q first
+    expect(result.chosenCards[0].rank).toBe(Rank.King);
+    expect(result.chosenCards[1].rank).toBe(Rank.King);
+    expect(result.chosenCards[2].rank).toBe(Rank.Queen);
+    expect(result.chosenCards[3].rank).toBe(Rank.Queen);
+    // Kicker: J (from the remaining cards, the J pair is broken to provide a kicker? Yes. J is higher than 9)
+    expect(result.chosenCards[4].rank).toBe(Rank.Jack);
+  });
 });
