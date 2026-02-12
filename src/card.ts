@@ -27,6 +27,40 @@ export class Card {
     public suit: Suit,
   ) {}
 
+  static fromString(str: string): Card {
+    str = str.trim();
+    if (str.length < 2) throw new Error(`Invalid card string: ${str}`);
+
+    const suitChar = str.slice(-1);
+    const rankStr = str.slice(0, -1);
+
+    let suit: Suit;
+    switch (suitChar.toLowerCase()) {
+      case 'c': case '♣': suit = Suit.Clubs; break;
+      case 'd': case '♦': suit = Suit.Diamonds; break;
+      case 'h': case '♥': suit = Suit.Hearts; break;
+      case 's': case '♠': suit = Suit.Spades; break;
+      default: throw new Error(`Invalid suit: ${suitChar}`);
+    }
+
+    let rank: Rank;
+    const num = Number(rankStr);
+    if (!isNaN(num) && num >= 2 && num <= 10) {
+      rank = num;
+    } else {
+      switch (rankStr.toUpperCase()) {
+        case 'T': rank = Rank.Ten; break;
+        case 'J': rank = Rank.Jack; break;
+        case 'Q': rank = Rank.Queen; break;
+        case 'K': rank = Rank.King; break;
+        case 'A': rank = Rank.Ace; break;
+        default: throw new Error(`Invalid rank: ${rankStr}`);
+      }
+    }
+
+    return new Card(rank, suit);
+  }
+
   toString(): string {
     let rankStr: string;
     switch (this.rank) {
