@@ -116,4 +116,26 @@ describe('HandEvaluator', () => {
     // Kicker A
     expect(result.chosenCards[4].rank).toBe(Rank.Ace);
   });
+
+  it('should identify Full House', () => {
+    const cards = [
+      new Card(Rank.King, Suit.Clubs),
+      new Card(Rank.King, Suit.Diamonds),
+      new Card(Rank.King, Suit.Hearts),
+      new Card(Rank.Queen, Suit.Spades),
+      new Card(Rank.Queen, Suit.Clubs),
+      new Card(Rank.Jack, Suit.Diamonds),
+      new Card(Rank.Two, Suit.Hearts)
+    ];
+
+    const result = HandEvaluator.evaluate(cards);
+
+    expect(result.category).toBe(HandCategory.FullHouse);
+    expect(result.chosenCards.length).toBe(5);
+    // K, K, K, Q, Q
+    expect(result.chosenCards[0].rank).toBe(Rank.King);
+    expect(result.chosenCards[2].rank).toBe(Rank.King);
+    expect(result.chosenCards[3].rank).toBe(Rank.Queen);
+    expect(result.chosenCards[4].rank).toBe(Rank.Queen);
+  });
 });

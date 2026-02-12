@@ -52,6 +52,24 @@ export class HandEvaluator {
       };
     }
 
+    if (trips.length >= 2) {
+      const bestTrip = trips[0];
+      const pairFromTrip = trips[1].slice(0, 2);
+      return {
+        category: HandCategory.FullHouse,
+        chosenCards: [...bestTrip, ...pairFromTrip]
+      };
+    }
+
+    if (trips.length === 1 && pairs.length >= 1) {
+      const bestTrip = trips[0];
+      const bestPair = pairs[0];
+      return {
+        category: HandCategory.FullHouse,
+        chosenCards: [...bestTrip, ...bestPair]
+      };
+    }
+
     if (trips.length > 0) {
       const bestTrip = trips[0];
       const kickers = sorted.filter(c => !bestTrip.includes(c)).slice(0, 2);
