@@ -94,4 +94,26 @@ describe('HandEvaluator', () => {
     expect(result.chosenCards[3].rank).toBe(Rank.Queen);
     expect(result.chosenCards[4].rank).toBe(Rank.Jack);
   });
+
+  it('should identify Four of a Kind', () => {
+    const cards = [
+      new Card(Rank.King, Suit.Clubs),
+      new Card(Rank.King, Suit.Diamonds),
+      new Card(Rank.King, Suit.Hearts),
+      new Card(Rank.King, Suit.Spades),
+      new Card(Rank.Ace, Suit.Clubs),
+      new Card(Rank.Two, Suit.Diamonds),
+      new Card(Rank.Three, Suit.Hearts)
+    ];
+
+    const result = HandEvaluator.evaluate(cards);
+
+    expect(result.category).toBe(HandCategory.FourOfAKind);
+    expect(result.chosenCards.length).toBe(5);
+    // K, K, K, K
+    expect(result.chosenCards[0].rank).toBe(Rank.King);
+    expect(result.chosenCards[3].rank).toBe(Rank.King);
+    // Kicker A
+    expect(result.chosenCards[4].rank).toBe(Rank.Ace);
+  });
 });

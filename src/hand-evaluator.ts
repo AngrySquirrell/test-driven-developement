@@ -32,13 +32,24 @@ export class HandEvaluator {
 
     const pairs: Card[][] = [];
     const trips: Card[][] = [];
+    const quads: Card[][] = [];
 
     const sortedRanks = Array.from(rankGroups.keys()).sort((a, b) => b - a);
 
     for (const rank of sortedRanks) {
       const group = rankGroups.get(rank)!;
-      if (group.length === 3) trips.push(group);
+      if (group.length === 4) quads.push(group);
+      else if (group.length === 3) trips.push(group);
       else if (group.length === 2) pairs.push(group);
+    }
+
+    if (quads.length > 0) {
+      const bestQuad = quads[0];
+      const kicker = sorted.filter(c => !bestQuad.includes(c))[0];
+      return {
+        category: HandCategory.FourOfAKind,
+        chosenCards: [...bestQuad, kicker]
+      };
     }
 
     if (trips.length > 0) {
