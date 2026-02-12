@@ -19,8 +19,34 @@ export interface HandResult {
 
 export class HandEvaluator {
   static evaluate(cards: Card[]): HandResult {
-    // Sort descending by rank
     const sorted = [...cards].sort((a, b) => b.rank - a.rank);
+    
+    // Group by rank
+    const rankGroups = new Map<Rank, Card[]>();
+    for (const card of sorted) {
+      if (!rankGroups.has(card.rank)) {
+        rankGroups.set(card.rank, []);
+      }
+      rankGroups.get(card.rank)!.push(card);
+    }
+
+    const pairs: Card[][] = [];
+
+    const sortedRanks = Array.from(rankGroups.keys()).sort((a, b) => b - a);
+
+    for (const rank of sortedRanks) {
+      const group = rankGroups.get(rank)!;
+      if (group.length === 2) pairs.push(group);
+    }
+
+    if (pairs.length > 0) {
+      const bestPair = pairs[0];
+      const kickers = sorted.filter(c => c.rank !== bestPair[0].rank).slice(0, 3);
+      return {
+        category: HandCategory.OnePair,
+        chosenCards: [...bestPair, ...kickers]
+      };
+    }
 
     // Fallback: High Card
     return {
