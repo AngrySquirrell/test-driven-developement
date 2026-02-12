@@ -11,11 +11,13 @@ A TypeScript TDD implementation of a Texas Hold'em hand evaluator.
 ## Setup & Run
 
 1. Install dependencies:
+
    ```bash
    npm install
    ```
 
 2. Run tests:
+
    ```bash
    npm test
    ```
@@ -47,4 +49,4 @@ The chosen 5 cards are returned in the following order:
 
 The core logic is in `HandEvaluator`. It sorts 7 cards, checks categories from highest to lowest, and returns the first match with the best 5-card combination.
 `PokerGame` orchestrates the game by evaluating each player's hand against the board and determining the winner(s).
-" 
+"

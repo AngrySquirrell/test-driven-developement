@@ -36,11 +36,24 @@ export class Card {
 
     let suit: Suit;
     switch (suitChar.toLowerCase()) {
-      case 'c': case '♣': suit = Suit.Clubs; break;
-      case 'd': case '♦': suit = Suit.Diamonds; break;
-      case 'h': case '♥': suit = Suit.Hearts; break;
-      case 's': case '♠': suit = Suit.Spades; break;
-      default: throw new Error(`Invalid suit: ${suitChar}`);
+      case "c":
+      case "♣":
+        suit = Suit.Clubs;
+        break;
+      case "d":
+      case "♦":
+        suit = Suit.Diamonds;
+        break;
+      case "h":
+      case "♥":
+        suit = Suit.Hearts;
+        break;
+      case "s":
+      case "♠":
+        suit = Suit.Spades;
+        break;
+      default:
+        throw new Error(`Invalid suit: ${suitChar}`);
     }
 
     let rank: Rank;
@@ -49,12 +62,23 @@ export class Card {
       rank = num;
     } else {
       switch (rankStr.toUpperCase()) {
-        case 'T': rank = Rank.Ten; break;
-        case 'J': rank = Rank.Jack; break;
-        case 'Q': rank = Rank.Queen; break;
-        case 'K': rank = Rank.King; break;
-        case 'A': rank = Rank.Ace; break;
-        default: throw new Error(`Invalid rank: ${rankStr}`);
+        case "T":
+          rank = Rank.Ten;
+          break;
+        case "J":
+          rank = Rank.Jack;
+          break;
+        case "Q":
+          rank = Rank.Queen;
+          break;
+        case "K":
+          rank = Rank.King;
+          break;
+        case "A":
+          rank = Rank.Ace;
+          break;
+        default:
+          throw new Error(`Invalid rank: ${rankStr}`);
       }
     }
 

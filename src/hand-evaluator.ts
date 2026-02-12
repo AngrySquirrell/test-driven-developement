@@ -1,15 +1,15 @@
-import { Card, Rank } from './card';
+import { Card, Rank } from "./card";
 
 export enum HandCategory {
-  HighCard = 'High Card',
-  OnePair = 'One Pair',
-  TwoPair = 'Two Pair',
-  ThreeOfAKind = 'Three of a Kind',
-  Straight = 'Straight',
-  Flush = 'Flush',
-  FullHouse = 'Full House',
-  FourOfAKind = 'Four of a Kind',
-  StraightFlush = 'Straight Flush'
+  HighCard = "High Card",
+  OnePair = "One Pair",
+  TwoPair = "Two Pair",
+  ThreeOfAKind = "Three of a Kind",
+  Straight = "Straight",
+  Flush = "Flush",
+  FullHouse = "Full House",
+  FourOfAKind = "Four of a Kind",
+  StraightFlush = "Straight Flush",
 }
 
 export interface HandResult {
@@ -20,7 +20,7 @@ export interface HandResult {
 export class HandEvaluator {
   static evaluate(cards: Card[]): HandResult {
     const sorted = [...cards].sort((a, b) => b.rank - a.rank);
-    
+
     // Group by rank
     const rankGroups = new Map<Rank, Card[]>();
     for (const card of sorted) {
@@ -45,10 +45,10 @@ export class HandEvaluator {
 
     if (quads.length > 0) {
       const bestQuad = quads[0];
-      const kicker = sorted.filter(c => !bestQuad.includes(c))[0];
+      const kicker = sorted.filter((c) => !bestQuad.includes(c))[0];
       return {
         category: HandCategory.FourOfAKind,
-        chosenCards: [...bestQuad, kicker]
+        chosenCards: [...bestQuad, kicker],
       };
     }
 
@@ -57,7 +57,7 @@ export class HandEvaluator {
       const pairFromTrip = trips[1].slice(0, 2);
       return {
         category: HandCategory.FullHouse,
-        chosenCards: [...bestTrip, ...pairFromTrip]
+        chosenCards: [...bestTrip, ...pairFromTrip],
       };
     }
 
@@ -66,12 +66,12 @@ export class HandEvaluator {
       const bestPair = pairs[0];
       return {
         category: HandCategory.FullHouse,
-        chosenCards: [...bestTrip, ...bestPair]
+        chosenCards: [...bestTrip, ...bestPair],
       };
     }
 
     // Check Flush & Straight Flush
-    const suitGroups = new Map<import('./card').Suit, Card[]>();
+    const suitGroups = new Map<import("./card").Suit, Card[]>();
     for (const card of sorted) {
       if (!suitGroups.has(card.suit)) suitGroups.set(card.suit, []);
       suitGroups.get(card.suit)!.push(card);
@@ -84,12 +84,12 @@ export class HandEvaluator {
         if (straightFlush) {
           return {
             category: HandCategory.StraightFlush,
-            chosenCards: straightFlush
+            chosenCards: straightFlush,
           };
         }
         return {
           category: HandCategory.Flush,
-          chosenCards: group.slice(0, 5)
+          chosenCards: group.slice(0, 5),
         };
       }
     }
@@ -108,16 +108,16 @@ export class HandEvaluator {
     if (straight) {
       return {
         category: HandCategory.Straight,
-        chosenCards: straight
+        chosenCards: straight,
       };
     }
 
     if (trips.length > 0) {
       const bestTrip = trips[0];
-      const kickers = sorted.filter(c => !bestTrip.includes(c)).slice(0, 2);
+      const kickers = sorted.filter((c) => !bestTrip.includes(c)).slice(0, 2);
       return {
         category: HandCategory.ThreeOfAKind,
-        chosenCards: [...bestTrip, ...kickers]
+        chosenCards: [...bestTrip, ...kickers],
       };
     }
 
@@ -125,42 +125,54 @@ export class HandEvaluator {
       const bestPair = pairs[0];
       const secondPair = pairs[1];
       const usedCards = [...bestPair, ...secondPair];
-      const kicker = sorted.filter(c => !usedCards.includes(c))[0];
+      const kicker = sorted.filter((c) => !usedCards.includes(c))[0];
       return {
         category: HandCategory.TwoPair,
-        chosenCards: [...bestPair, ...secondPair, kicker]
+        chosenCards: [...bestPair, ...secondPair, kicker],
       };
     }
 
     if (pairs.length > 0) {
       const bestPair = pairs[0];
-      const kickers = sorted.filter(c => c.rank !== bestPair[0].rank).slice(0, 3);
+      const kickers = sorted
+        .filter((c) => c.rank !== bestPair[0].rank)
+        .slice(0, 3);
       return {
         category: HandCategory.OnePair,
-        chosenCards: [...bestPair, ...kickers]
+        chosenCards: [...bestPair, ...kickers],
       };
     }
 
     // Fallback: High Card
     return {
       category: HandCategory.HighCard,
-      chosenCards: sorted.slice(0, 5)
+      chosenCards: sorted.slice(0, 5),
     };
   }
 
   static compare(hand1: HandResult, hand2: HandResult): number {
     const score = (cat: HandCategory): number => {
       switch (cat) {
-        case HandCategory.StraightFlush: return 9;
-        case HandCategory.FourOfAKind: return 8;
-        case HandCategory.FullHouse: return 7;
-        case HandCategory.Flush: return 6;
-        case HandCategory.Straight: return 5;
-        case HandCategory.ThreeOfAKind: return 4;
-        case HandCategory.TwoPair: return 3;
-        case HandCategory.OnePair: return 2;
-        case HandCategory.HighCard: return 1;
-        default: return 0;
+        case HandCategory.StraightFlush:
+          return 9;
+        case HandCategory.FourOfAKind:
+          return 8;
+        case HandCategory.FullHouse:
+          return 7;
+        case HandCategory.Flush:
+          return 6;
+        case HandCategory.Straight:
+          return 5;
+        case HandCategory.ThreeOfAKind:
+          return 4;
+        case HandCategory.TwoPair:
+          return 3;
+        case HandCategory.OnePair:
+          return 2;
+        case HandCategory.HighCard:
+          return 1;
+        default:
+          return 0;
       }
     };
 
@@ -190,10 +202,22 @@ export class HandEvaluator {
     }
 
     // Ace Low Straight (Wheel): A, 5, 4, 3, 2
-    const hasRank = (r: Rank) => cards.some(c => c.rank === r);
-    if (hasRank(Rank.Ace) && hasRank(Rank.Five) && hasRank(Rank.Four) && hasRank(Rank.Three) && hasRank(Rank.Two)) {
-      const get = (r: Rank) => cards.find(c => c.rank === r)!;
-      return [get(Rank.Five), get(Rank.Four), get(Rank.Three), get(Rank.Two), get(Rank.Ace)];
+    const hasRank = (r: Rank) => cards.some((c) => c.rank === r);
+    if (
+      hasRank(Rank.Ace) &&
+      hasRank(Rank.Five) &&
+      hasRank(Rank.Four) &&
+      hasRank(Rank.Three) &&
+      hasRank(Rank.Two)
+    ) {
+      const get = (r: Rank) => cards.find((c) => c.rank === r)!;
+      return [
+        get(Rank.Five),
+        get(Rank.Four),
+        get(Rank.Three),
+        get(Rank.Two),
+        get(Rank.Ace),
+      ];
     }
 
     return null;

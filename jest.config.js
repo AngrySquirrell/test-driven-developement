@@ -1,4 +1,5 @@
-const { createDefaultPreset } = require("ts-jest");
+// const { createDefaultPreset } = require("ts-jest");
+import { createDefaultPreset } from "ts-jest/presets";
 
 const tsJestTransformCfg = createDefaultPreset().transform;
 
