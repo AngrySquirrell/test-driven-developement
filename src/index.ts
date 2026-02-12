@@ -1,10 +1,8 @@
 import { PokerGame } from './poker-game';
 
-// Example usage function
 export function runExample() {
   console.log('--- Texas Holdem Hand Evaluator ---');
   
-  // Example A
   console.log('\nExample A (Ace-low straight):');
   const game1 = new PokerGame(
       ['A♣', '2♦', '3♥', '4♠', '9♦'],
@@ -14,7 +12,6 @@ export function runExample() {
   );
   printResult(game1.play());
 
-  // Example D (Split)
   console.log('\nExample D (Split):');
   const game2 = new PokerGame(
       ['5♣', '6♦', '7♥', '8♠', '9♦'],
@@ -40,7 +37,6 @@ function printResult(result: import('./poker-game').GameResult) {
   }
 }
 
-// Run if main
 if (require.main === module) {
   runExample();
 }
