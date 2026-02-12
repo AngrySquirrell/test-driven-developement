@@ -179,4 +179,24 @@ describe('HandEvaluator', () => {
     expect(result.chosenCards[0].rank).toBe(Rank.Ten);
     expect(result.chosenCards[4].rank).toBe(Rank.Six);
   });
+
+  it('should identify Ace Low Straight', () => {
+    const cards = [
+      new Card(Rank.Ace, Suit.Clubs),
+      new Card(Rank.Five, Suit.Diamonds),
+      new Card(Rank.Four, Suit.Hearts),
+      new Card(Rank.Three, Suit.Spades),
+      new Card(Rank.Two, Suit.Clubs),
+      new Card(Rank.King, Suit.Diamonds), // Extra
+      new Card(Rank.Eight, Suit.Hearts)   // Extra
+    ];
+
+    const result = HandEvaluator.evaluate(cards);
+
+    expect(result.category).toBe(HandCategory.Straight);
+    expect(result.chosenCards.length).toBe(5);
+    // 5, 4, 3, 2, A
+    expect(result.chosenCards[0].rank).toBe(Rank.Five);
+    expect(result.chosenCards[4].rank).toBe(Rank.Ace);
+  });
 });
