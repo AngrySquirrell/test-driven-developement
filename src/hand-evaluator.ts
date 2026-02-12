@@ -70,7 +70,7 @@ export class HandEvaluator {
       };
     }
 
-    // Check Flush
+    // Check Flush & Straight Flush
     const suitGroups = new Map<import('./card').Suit, Card[]>();
     for (const card of sorted) {
       if (!suitGroups.has(card.suit)) suitGroups.set(card.suit, []);
@@ -79,6 +79,14 @@ export class HandEvaluator {
 
     for (const group of suitGroups.values()) {
       if (group.length >= 5) {
+        // Check Straight Flush
+        const straightFlush = this.getStraight(group);
+        if (straightFlush) {
+          return {
+            category: HandCategory.StraightFlush,
+            chosenCards: straightFlush
+          };
+        }
         return {
           category: HandCategory.Flush,
           chosenCards: group.slice(0, 5)
@@ -96,24 +104,11 @@ export class HandEvaluator {
       }
     }
 
-    if (uniqueRankCards.length >= 5) {
-      for (let i = 0; i <= uniqueRankCards.length - 5; i++) {
-        const slice = uniqueRankCards.slice(i, i + 5);
-        if (slice[0].rank - slice[4].rank === 4) {
-          return {
-            category: HandCategory.Straight,
-            chosenCards: slice
-          };
-        }
-      }
-    }
-
-    // Ace Low Straight
-    if (seenRanks.has(Rank.Ace) && seenRanks.has(Rank.Two) && seenRanks.has(Rank.Three) && seenRanks.has(Rank.Four) && seenRanks.has(Rank.Five)) {
-      const getCard = (r: Rank) => uniqueRankCards.find(c => c.rank === r)!;
+    const straight = this.getStraight(uniqueRankCards);
+    if (straight) {
       return {
         category: HandCategory.Straight,
-        chosenCards: [getCard(Rank.Five), getCard(Rank.Four), getCard(Rank.Three), getCard(Rank.Two), getCard(Rank.Ace)]
+        chosenCards: straight
       };
     }
 
@@ -151,5 +146,26 @@ export class HandEvaluator {
       category: HandCategory.HighCard,
       chosenCards: sorted.slice(0, 5)
     };
+  }
+
+  private static getStraight(cards: Card[]): Card[] | null {
+    if (cards.length < 5) return null;
+
+    // Normal Straight
+    for (let i = 0; i <= cards.length - 5; i++) {
+      const slice = cards.slice(i, i + 5);
+      if (slice[0].rank - slice[4].rank === 4) {
+        return slice;
+      }
+    }
+
+    // Ace Low Straight (Wheel): A, 5, 4, 3, 2
+    const hasRank = (r: Rank) => cards.some(c => c.rank === r);
+    if (hasRank(Rank.Ace) && hasRank(Rank.Five) && hasRank(Rank.Four) && hasRank(Rank.Three) && hasRank(Rank.Two)) {
+      const get = (r: Rank) => cards.find(c => c.rank === r)!;
+      return [get(Rank.Five), get(Rank.Four), get(Rank.Three), get(Rank.Two), get(Rank.Ace)];
+    }
+
+    return null;
   }
 }
