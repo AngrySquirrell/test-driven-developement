@@ -86,6 +86,37 @@ export class HandEvaluator {
       }
     }
 
+    // Check Straight
+    const uniqueRankCards: Card[] = [];
+    const seenRanks = new Set<Rank>();
+    for (const card of sorted) {
+      if (!seenRanks.has(card.rank)) {
+        seenRanks.add(card.rank);
+        uniqueRankCards.push(card);
+      }
+    }
+
+    if (uniqueRankCards.length >= 5) {
+      for (let i = 0; i <= uniqueRankCards.length - 5; i++) {
+        const slice = uniqueRankCards.slice(i, i + 5);
+        if (slice[0].rank - slice[4].rank === 4) {
+          return {
+            category: HandCategory.Straight,
+            chosenCards: slice
+          };
+        }
+      }
+    }
+
+    // Ace Low Straight
+    if (seenRanks.has(Rank.Ace) && seenRanks.has(Rank.Two) && seenRanks.has(Rank.Three) && seenRanks.has(Rank.Four) && seenRanks.has(Rank.Five)) {
+      const getCard = (r: Rank) => uniqueRankCards.find(c => c.rank === r)!;
+      return {
+        category: HandCategory.Straight,
+        chosenCards: [getCard(Rank.Five), getCard(Rank.Four), getCard(Rank.Three), getCard(Rank.Two), getCard(Rank.Ace)]
+      };
+    }
+
     if (trips.length > 0) {
       const bestTrip = trips[0];
       const kickers = sorted.filter(c => !bestTrip.includes(c)).slice(0, 2);
