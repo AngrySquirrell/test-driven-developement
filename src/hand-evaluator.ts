@@ -148,6 +148,36 @@ export class HandEvaluator {
     };
   }
 
+  static compare(hand1: HandResult, hand2: HandResult): number {
+    const score = (cat: HandCategory): number => {
+      switch (cat) {
+        case HandCategory.StraightFlush: return 9;
+        case HandCategory.FourOfAKind: return 8;
+        case HandCategory.FullHouse: return 7;
+        case HandCategory.Flush: return 6;
+        case HandCategory.Straight: return 5;
+        case HandCategory.ThreeOfAKind: return 4;
+        case HandCategory.TwoPair: return 3;
+        case HandCategory.OnePair: return 2;
+        case HandCategory.HighCard: return 1;
+        default: return 0;
+      }
+    };
+
+    const s1 = score(hand1.category);
+    const s2 = score(hand2.category);
+
+    if (s1 !== s2) return s1 - s2;
+
+    for (let i = 0; i < hand1.chosenCards.length; i++) {
+      const r1 = hand1.chosenCards[i].rank;
+      const r2 = hand2.chosenCards[i].rank;
+      if (r1 !== r2) return r1 - r2;
+    }
+
+    return 0;
+  }
+
   private static getStraight(cards: Card[]): Card[] | null {
     if (cards.length < 5) return null;
 
