@@ -70,4 +70,28 @@ describe('HandEvaluator', () => {
     // Kicker: J (from the remaining cards, the J pair is broken to provide a kicker? Yes. J is higher than 9)
     expect(result.chosenCards[4].rank).toBe(Rank.Jack);
   });
+
+  it('should identify Three of a Kind', () => {
+    const cards = [
+      new Card(Rank.King, Suit.Clubs),
+      new Card(Rank.King, Suit.Diamonds),
+      new Card(Rank.King, Suit.Hearts),
+      new Card(Rank.Queen, Suit.Spades),
+      new Card(Rank.Jack, Suit.Clubs),
+      new Card(Rank.Two, Suit.Diamonds),
+      new Card(Rank.Three, Suit.Hearts)
+    ];
+
+    const result = HandEvaluator.evaluate(cards);
+
+    expect(result.category).toBe(HandCategory.ThreeOfAKind);
+    expect(result.chosenCards.length).toBe(5);
+    // K, K, K first
+    expect(result.chosenCards[0].rank).toBe(Rank.King);
+    expect(result.chosenCards[1].rank).toBe(Rank.King);
+    expect(result.chosenCards[2].rank).toBe(Rank.King);
+    // Kickers Q, J
+    expect(result.chosenCards[3].rank).toBe(Rank.Queen);
+    expect(result.chosenCards[4].rank).toBe(Rank.Jack);
+  });
 });

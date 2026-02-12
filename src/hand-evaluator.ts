@@ -31,12 +31,23 @@ export class HandEvaluator {
     }
 
     const pairs: Card[][] = [];
+    const trips: Card[][] = [];
 
     const sortedRanks = Array.from(rankGroups.keys()).sort((a, b) => b - a);
 
     for (const rank of sortedRanks) {
       const group = rankGroups.get(rank)!;
-      if (group.length === 2) pairs.push(group);
+      if (group.length === 3) trips.push(group);
+      else if (group.length === 2) pairs.push(group);
+    }
+
+    if (trips.length > 0) {
+      const bestTrip = trips[0];
+      const kickers = sorted.filter(c => !bestTrip.includes(c)).slice(0, 2);
+      return {
+        category: HandCategory.ThreeOfAKind,
+        chosenCards: [...bestTrip, ...kickers]
+      };
     }
 
     if (pairs.length >= 2) {
